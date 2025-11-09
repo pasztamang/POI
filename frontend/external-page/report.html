@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reports - Power Outage Statistics Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../css/style.css">
 </head>
+
 <body>
     <div class="dashboard">
         <!-- Top Header -->
         <div class="top-header">
             <div class="top-header-content">
-               <div class="logo-container">
+                <div class="logo-container">
                     <img src="logo.png" alt="Power Outage Info Logo" class="logo">
                     <h3>BPC-POI</h3>
-               </div>
+                </div>
                 <div class="top-nav-right">
-                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="../../index.html" class="nav-link">Home</a>
                     <a href="history.html" class="nav-link">Outage History</a>
                     <a href="report.html" class="nav-link active">Reports</a>
                     <a href="notifications.html" class="nav-link">Notifications</a>
-                    <a href="others.html" class="nav-link">Others</a>
+                    <a href="../internal-page/main.html" class="nav-link">Others</a>
                 </div>
                 <!-- Mobile Menu Button -->
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
@@ -31,11 +33,11 @@
             </div>
             <!-- Mobile Navigation -->
             <div class="mobile-nav" id="mobileNav">
-                <a href="index.html" class="nav-link">Home</a>
+                <a href="../../index.html" class="nav-link">Home</a>
                 <a href="history.html" class="nav-link">Outage History</a>
                 <a href="report.html" class="nav-link active">Reports</a>
                 <a href="notifications.html" class="nav-link">Notifications</a>
-                <a href="others.html" class="nav-link">Others</a>
+                <a href="../internal-page/main.html" class="nav-link">Others</a>
             </div>
         </div>
 
@@ -70,13 +72,13 @@
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileNav = document.getElementById('mobileNav');
 
-        mobileMenuBtn.addEventListener('click', function() {
+        mobileMenuBtn.addEventListener('click', function () {
             this.classList.toggle('active');
             mobileNav.classList.toggle('active');
         });
 
         // Close mobile menu when clicking outside
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             if (!event.target.closest('.top-header-content') && !event.target.closest('.mobile-nav')) {
                 mobileMenuBtn.classList.remove('active');
                 mobileNav.classList.remove('active');
@@ -84,4 +86,5 @@
         });
     </script>
 </body>
+
 </html>

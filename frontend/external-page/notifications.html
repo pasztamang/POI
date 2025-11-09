@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -71,7 +72,8 @@
             transition: background 0.3s;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover,
+        .nav-link.active {
             background: rgba(255, 255, 255, 0.15);
         }
 
@@ -350,8 +352,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .error {
@@ -452,22 +459,25 @@
         }
     </style>
 </head>
+
 <body>
     <div class="dashboard">
         <!-- Top Header -->
         <div class="top-header">
             <div class="top-header-content">
-               <div class="logo-container">
+                <div class="logo-container">
                     <!-- Using a placeholder logo - replace with your actual logo -->
-                    <div class="logo" style="background: white; width: 40px; height: 40px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #2e7d32;">BPC</div>
+                    <div class="logo"
+                        style="background: white; width: 40px; height: 40px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #2e7d32;">
+                        BPC</div>
                     <h3>BPC-POI</h3>
-               </div>
+                </div>
                 <div class="top-nav-right">
-                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="../../index.html" class="nav-link">Home</a>
                     <a href="history.html" class="nav-link">Outage History</a>
                     <a href="report.html" class="nav-link">Reports</a>
                     <a href="notifications.html" class="nav-link active">Notifications</a>
-                    <a href="others.html" class="nav-link">Others</a>
+                    <a href="../internal-page/main.html" class="nav-link">Others</a>
                 </div>
                 <!-- Mobile Menu Button -->
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
@@ -478,11 +488,11 @@
             </div>
             <!-- Mobile Navigation -->
             <div class="mobile-nav" id="mobileNav">
-                <a href="index.html" class="nav-link">Home</a>
+                <a href="../../index.html" class="nav-link">Home</a>
                 <a href="history.html" class="nav-link">Outage History</a>
                 <a href="report.html" class="nav-link">Reports</a>
                 <a href="notifications.html" class="nav-link active">Notifications</a>
-                <a href="others.html" class="nav-link">Others</a>
+                <a href="../internal-page/main.html" class="nav-link">Others</a>
             </div>
         </div>
 
@@ -514,7 +524,7 @@
                     <option value="Paro">Paro</option>
                     <option value="Punakha">Punakha</option>
                 </select>
-                
+
                 <select class="filter-select" id="statusFilter" onchange="filterOutages()">
                     <option value="all">All Status</option>
                     <option value="Planned">Planned</option>
@@ -542,7 +552,7 @@
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbwbJM9o6-0ffoErIJrrvRNRgFDMnZ28158gz5LroKoI5wbLiXWOCgd049611Dyk52-_/exec';
-        
+
         // Store view counts in localStorage
         let viewCounts = JSON.parse(localStorage.getItem('outageViewCounts')) || {};
 
@@ -581,9 +591,9 @@
         async function processPDFData(pdfLinks) {
             // In a real implementation, you would extract text from PDFs
             // For this example, we'll simulate extracting data from your sample
-            
+
             const outages = [];
-            
+
             // Sample data based on your image
             const sampleOutage = {
                 id: 1,
@@ -599,9 +609,9 @@
                 pdfUrl: pdfLinks.length > 0 ? pdfLinks[0] : "#",
                 viewCount: Math.floor(Math.random() * 100) + 20
             };
-            
+
             outages.push(sampleOutage);
-            
+
             // Add more sample outages for demonstration
             if (pdfLinks.length > 1) {
                 outages.push({
@@ -619,7 +629,7 @@
                     viewCount: Math.floor(Math.random() * 100) + 20
                 });
             }
-            
+
             if (pdfLinks.length > 2) {
                 outages.push({
                     id: 3,
@@ -636,7 +646,7 @@
                     viewCount: Math.floor(Math.random() * 100) + 20
                 });
             }
-            
+
             return outages;
         }
 
@@ -657,9 +667,9 @@
                     month: 'long',
                     day: 'numeric'
                 });
-                
+
                 const viewCount = viewCounts[outage.id] || outage.viewCount;
-                
+
                 return `
                     <div class="outage-card" data-dzongkhag="${outage.dzongkhag}" data-status="${outage.type}">
                         <div class="card-header">
@@ -701,9 +711,9 @@
                                     <div class="info-content">
                                         <div class="info-label">Affected Areas</div>
                                         <div class="affected-areas">
-                                            ${outage.affectedAreas.map(area => 
-                                                `<span class="area-tag">${area}</span>`
-                                            ).join('')}
+                                            ${outage.affectedAreas.map(area =>
+                    `<span class="area-tag">${area}</span>`
+                ).join('')}
                                         </div>
                                     </div>
                                 </div>
@@ -732,7 +742,7 @@
                     </div>
                 `;
             }).join('');
-            
+
             outageContainer.style.display = 'grid';
             loading.style.display = 'none';
         }
@@ -740,7 +750,7 @@
         function displayNoOutages() {
             const outageContainer = document.getElementById('outageContainer');
             const loading = document.getElementById('loading');
-            
+
             outageContainer.innerHTML = `
                 <div class="empty-state">
                     <div class="empty-state-icon">
@@ -751,7 +761,7 @@
                     <p>Check back later for updates.</p>
                 </div>
             `;
-            
+
             outageContainer.style.display = 'grid';
             loading.style.display = 'none';
         }
@@ -766,17 +776,17 @@
         function filterOutages() {
             const dzongkhagFilter = document.getElementById('dzongkhagFilter').value;
             const statusFilter = document.getElementById('statusFilter').value;
-            
+
             const cards = document.querySelectorAll('.outage-card');
             let visibleCount = 0;
-            
+
             cards.forEach(card => {
                 const dzongkhag = card.getAttribute('data-dzongkhag');
                 const status = card.getAttribute('data-status');
-                
+
                 const dzongkhagMatch = dzongkhagFilter === 'all' || dzongkhag === dzongkhagFilter;
                 const statusMatch = statusFilter === 'all' || status === statusFilter;
-                
+
                 if (dzongkhagMatch && statusMatch) {
                     card.style.display = 'block';
                     visibleCount++;
@@ -784,7 +794,7 @@
                     card.style.display = 'none';
                 }
             });
-            
+
             // Show empty state if no cards are visible
             if (visibleCount === 0 && cards.length > 0) {
                 outageContainer.innerHTML = `
@@ -803,16 +813,17 @@
         document.addEventListener('DOMContentLoaded', loadOutages);
 
         // Mobile menu functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
             const mobileNav = document.getElementById('mobileNav');
 
             if (mobileMenuBtn && mobileNav) {
-                mobileMenuBtn.addEventListener('click', function() {
+                mobileMenuBtn.addEventListener('click', function () {
                     mobileNav.classList.toggle('active');
                 });
             }
         });
     </script>
 </body>
+
 </html>

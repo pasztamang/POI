@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Outage History - Power Outage Statistics Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../css/style.css">
     <style>
         /* Additional styles for the custom filter dropdown */
         .header-controls {
@@ -14,24 +14,24 @@
             align-items: center;
             width: 100%;
         }
-        
+
         .controls-left {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-        
+
         .controls-right {
             display: flex;
             align-items: center;
             gap: 1rem;
         }
-        
+
         .filter-dropdown-container {
             display: inline-block;
             position: relative;
         }
-        
+
         .filter-dropdown-btn {
             background-color: #f0f0f0;
             border: 1px solid #ccc;
@@ -44,29 +44,29 @@
             min-width: 150px;
             color: #333;
         }
-        
+
         .filter-dropdown-btn::after {
             content: "▼";
             font-size: 0.8rem;
             margin-left: 0.5rem;
         }
-        
+
         .filter-dropdown-content {
             display: none;
             position: absolute;
             background-color: white;
             min-width: 200px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
             z-index: 1;
             border-radius: 4px;
             overflow: hidden;
             left: 0;
         }
-        
+
         .filter-dropdown-content.show {
             display: block;
         }
-        
+
         .filter-dropdown-item {
             padding: 0.75rem 1rem;
             cursor: pointer;
@@ -74,21 +74,21 @@
             background-color: #f8f9fa;
             color: #333;
         }
-        
+
         .filter-dropdown-item:hover {
             background-color: #e9ecef;
         }
-        
+
         .filter-dropdown-item.active {
             background-color: #e6f7ff;
             color: #1890ff;
         }
-        
+
         .results-count {
             font-weight: bold;
             color: white;
         }
-        
+
         .export-btn {
             background-color: #1e7e34;
             color: white;
@@ -98,11 +98,11 @@
             cursor: pointer;
             transition: background-color 0.2s;
         }
-        
+
         .export-btn:hover {
             background-color: #155724;
         }
-        
+
         /* Modal styles */
         .modal {
             display: none;
@@ -116,11 +116,11 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .modal.show {
             display: flex;
         }
-        
+
         .modal-content {
             background-color: white;
             padding: 2rem;
@@ -129,7 +129,7 @@
             max-width: 500px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-        
+
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -138,14 +138,14 @@
             padding-bottom: 0.5rem;
             border-bottom: 1px solid #eee;
         }
-        
+
         .modal-title {
             font-size: 1.25rem;
             font-weight: bold;
             margin: 0;
             color: #333;
         }
-        
+
         .close-modal {
             background: none;
             border: none;
@@ -153,29 +153,30 @@
             cursor: pointer;
             color: #666;
         }
-        
+
         .modal-body {
             margin-bottom: 1.5rem;
         }
-        
+
         .modal-footer {
             display: flex;
             justify-content: flex-end;
             gap: 0.5rem;
         }
-        
+
         .filter-group {
             margin-bottom: 1rem;
         }
-        
+
         .filter-group label {
             display: block;
             margin-bottom: 0.25rem;
             font-weight: 500;
             color: #333;
         }
-        
-        .filter-input, .filter-select {
+
+        .filter-input,
+        .filter-select {
             width: 100%;
             padding: 0.5rem;
             border: 1px solid #ccc;
@@ -183,7 +184,7 @@
             color: #333;
             background-color: white;
         }
-        
+
         .apply-btn {
             background-color: #007bff;
             color: white;
@@ -192,11 +193,11 @@
             padding: 0.5rem 1rem;
             cursor: pointer;
         }
-        
+
         .apply-btn:hover {
             background-color: #0069d9;
         }
-        
+
         .clear-btn {
             background-color: #6c757d;
             color: white;
@@ -205,22 +206,22 @@
             padding: 0.5rem 1rem;
             cursor: pointer;
         }
-        
+
         .clear-btn:hover {
             background-color: #5a6268;
         }
-        
+
         .quick-filters {
             margin-bottom: 1rem;
         }
-        
+
         /* Loading and error states */
         .loading {
             text-align: center;
             padding: 2rem;
             color: #666;
         }
-        
+
         .spinner {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #3498db;
@@ -230,28 +231,37 @@
             animation: spin 2s linear infinite;
             margin: 0 auto 1rem;
         }
-        
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
-        
-        .no-data, .error-state {
+
+        .no-data,
+        .error-state {
             text-align: center;
             padding: 2rem;
             color: #666;
         }
-        
+
         .error-state {
             color: #d9534f;
         }
-        
+
         /* Table styles - Auto-fit height */
         .table-container {
             overflow-x: auto;
-            height: calc(100vh - 200px); /* Auto-fit to viewport height minus header */
-            min-height: 400px; /* Minimum height */
-            max-height: 80vh; /* Maximum height */
+            height: calc(100vh - 200px);
+            /* Auto-fit to viewport height minus header */
+            min-height: 400px;
+            /* Minimum height */
+            max-height: 80vh;
+            /* Maximum height */
             display: flex;
             flex-direction: column;
         }
@@ -260,12 +270,13 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.8rem;
-            flex: 1; /* Fill available space */
+            flex: 1;
+            /* Fill available space */
         }
 
         .history-table th {
-           background: var(--light-green);
-           color: var(--primary-green);
+            background: var(--light-green);
+            color: var(--primary-green);
             padding: 0.8rem;
             text-align: left;
             font-weight: 600;
@@ -281,7 +292,7 @@
         }
 
         .history-table tr:hover {
-           background: var(--light-green);
+            background: var(--light-green);
         }
 
         .history-table tr:last-child td {
@@ -298,7 +309,7 @@
             color: #dc3545;
             font-weight: bold;
         }
-   
+
         /* Loading State Improvements */
         .loading {
             display: flex;
@@ -335,37 +346,39 @@
         /* Responsive Design */
         @media (max-width: 768px) {
             .table-container {
-                height: calc(100vh - 180px); /* Adjust for smaller screens */
+                height: calc(100vh - 180px);
+                /* Adjust for smaller screens */
             }
-            
+
             .history-filters {
                 grid-template-columns: 1fr;
                 gap: 0.8rem;
                 padding: 1rem;
             }
-            
+
             .filter-actions {
                 grid-column: 1;
                 justify-content: stretch;
             }
-            
-            .apply-btn, .clear-btn {
+
+            .apply-btn,
+            .clear-btn {
                 flex: 1;
             }
-            
+
             .quick-filters {
                 flex-wrap: wrap;
             }
-            
+
             .history-table {
                 font-size: 0.7rem;
             }
-            
+
             .history-table th,
             .history-table td {
                 padding: 0.6rem;
             }
-            
+
             .date-range-group {
                 flex-direction: column;
                 gap: 0.5rem;
@@ -374,14 +387,15 @@
 
         @media (max-width: 480px) {
             .table-container {
-                height: calc(100vh - 160px); /* Further adjust for mobile */
+                height: calc(100vh - 160px);
+                /* Further adjust for mobile */
             }
-            
+
             .quick-filters {
                 flex-direction: column;
                 align-items: stretch;
             }
-            
+
             .quick-filter-btn {
                 text-align: center;
             }
@@ -399,11 +413,11 @@
                     <h3>BPC-POI</h3>
                 </div>
                 <div class="top-nav-right">
-                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="../../index.html" class="nav-link">Home</a>
                     <a href="history.html" class="nav-link active">Outage History</a>
-                    <a href="reports.html" class="nav-link">Reports</a>
+                    <a href="report.html" class="nav-link">Reports</a>
                     <a href="notifications.html" class="nav-link">Notifications</a>
-                    <a href="others.html" class="nav-link">Others</a>
+                    <a href="../internal-page/main.html" class="nav-link">Others</a>
                 </div>
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <span></span>
@@ -412,11 +426,11 @@
                 </button>
             </div>
             <div class="mobile-nav" id="mobileNav">
-                <a href="index.html" class="nav-link">Home</a>
+                <a href="../../index.html" class="nav-link">Home</a>
                 <a href="history.html" class="nav-link active">Outage History</a>
-                <a href="reports.html" class="nav-link">Reports</a>
+                <a href="report.html" class="nav-link">Reports</a>
                 <a href="notifications.html" class="nav-link">Notifications</a>
-                <a href="others.html" class="nav-link">Others</a>
+                <a href="../internal-page/main.html" class="nav-link">Others</a>
             </div>
         </div>
 
@@ -440,7 +454,7 @@
                         </div>
                         <div class="controls-right">
                             <div class="results-count">
-                             Loaded   <span id="resultsCount">0</span> Records
+                                Loaded <span id="resultsCount">0</span> Records
                             </div>
                             <button class="export-btn" onclick="exportToCSV()">Export to CSV</button>
                         </div>
@@ -553,31 +567,31 @@
         let currentFilter = '7'; // Default to Last 7 Days
 
         // Toggle dropdown
-        filterDropdownBtn.addEventListener('click', function(e) {
+        filterDropdownBtn.addEventListener('click', function (e) {
             e.stopPropagation();
             filterDropdownContent.classList.toggle('show');
         });
 
         // Close dropdown when clicking outside
-        document.addEventListener('click', function() {
+        document.addEventListener('click', function () {
             filterDropdownContent.classList.remove('show');
         });
 
         // Handle filter selection
         filterDropdownItems.forEach(item => {
-            item.addEventListener('click', function() {
+            item.addEventListener('click', function () {
                 const value = this.getAttribute('data-value');
-                
+
                 // Update active state
                 filterDropdownItems.forEach(i => i.classList.remove('active'));
                 this.classList.add('active');
-                
+
                 // Update button text
                 filterDropdownBtn.textContent = this.textContent;
-                
+
                 // Close dropdown
                 filterDropdownContent.classList.remove('show');
-                
+
                 // Handle custom filter
                 if (value === 'custom') {
                     customFilterModal.classList.add('show');
@@ -590,12 +604,12 @@
         });
 
         // Modal functionality
-        closeModal.addEventListener('click', function() {
+        closeModal.addEventListener('click', function () {
             customFilterModal.classList.remove('show');
         });
 
         // Close modal when clicking outside
-        customFilterModal.addEventListener('click', function(e) {
+        customFilterModal.addEventListener('click', function (e) {
             if (e.target === customFilterModal) {
                 customFilterModal.classList.remove('show');
             }
@@ -627,13 +641,13 @@
                 if (timeString.includes('T')) {
                     const date = new Date(timeString);
                     if (isNaN(date.getTime())) return timeString;
-                    
+
                     // Format to local time without T and Z
-                    return date.toLocaleTimeString([], { 
-                        hour: '2-digit', 
+                    return date.toLocaleTimeString([], {
+                        hour: '2-digit',
                         minute: '2-digit',
                         second: '2-digit',
-                        hour12: false 
+                        hour12: false
                     });
                 }
                 return timeString;
@@ -668,7 +682,7 @@
 
             try {
                 const params = new URLSearchParams();
-                
+
                 // Always apply date filters to prevent loading all data
                 if (filters.startDate) {
                     params.append('startDate', filters.startDate);
@@ -678,7 +692,7 @@
                     defaultStartDate.setDate(defaultStartDate.getDate() - 7);
                     params.append('startDate', defaultStartDate.toISOString().split('T')[0]);
                 }
-                
+
                 if (filters.endDate) {
                     params.append('endDate', filters.endDate);
                 } else {
@@ -686,7 +700,7 @@
                     const defaultEndDate = new Date();
                     params.append('endDate', defaultEndDate.toISOString().split('T')[0]);
                 }
-                
+
                 if (filters.dzongkhag && filters.dzongkhag !== 'all') params.append('dzongkhag', filters.dzongkhag);
                 if (filters.outageType && filters.outageType !== 'all') params.append('outageType', filters.outageType);
 
@@ -696,7 +710,7 @@
                 if (data.success && data.outages) {
                     // Store data for export
                     currentOutageData = data.outages;
-                    
+
                     resultsCount.textContent = data.outages.length;
 
                     if (data.outages.length === 0) {
@@ -875,18 +889,18 @@
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
                 const link = document.createElement('a');
                 const url = URL.createObjectURL(blob);
-                
+
                 link.setAttribute('href', url);
                 link.setAttribute('download', `outage_history_${new Date().toISOString().split('T')[0]}.csv`);
                 link.style.visibility = 'hidden';
-                
+
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                
+
                 // Clean up URL object
                 setTimeout(() => URL.revokeObjectURL(url), 100);
-                
+
             } catch (error) {
                 console.error('Error exporting CSV:', error);
                 alert('Error exporting data to CSV. Please try again.');
@@ -896,7 +910,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function () {
             loadFilterOptions();
-            
+
             // Set default to last 7 days and load data
             setDateRange(7);
         });
