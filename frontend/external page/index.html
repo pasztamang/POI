@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Outage Statistics Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Top Header -->
+        <div class="top-header">
+            <div class="top-header-content">
+               <div class="logo-container">
+                    <img src="D:\POIMS\image\logo.png" alt="Power Outage Info Logo" class="logo">
+                    <h3>BPC-POI</h3>
+               </div>
+                <div class="top-nav-right">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="history.html" class="nav-link">Outage History</a>
+                    <a href="report.html" class="nav-link">Reports</a>
+                    <a href="notifications.html" class="nav-link">Notifications</a>
+                    <a href="others.html" class="nav-link">Others</a>
+                </div>
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <!-- Mobile Navigation -->
+            <div class="mobile-nav" id="mobileNav">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="history.html" class="nav-link">Outage History</a>
+                <a href="report.html" class="nav-link">Reports</a>
+                <a href="notifications.html" class="nav-link">Notifications</a>
+                <a href="others.html" class="nav-link">Others</a>
+            </div>
+        </div>
+
+        <!-- Main Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-main">
+                    <div class="header-controls">
+                        <!-- Month Selector -->
+                        <div class="month-selector">
+                            <label for="monthSelect">Select Month:</label>
+                            <select id="monthSelect" class="month-dropdown">
+                                <option value="">Loading months...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Loading Spinner -->
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading...</p>
+        </div>
+
+        <!-- Dashboard Content -->
+        <main class="main-content">
+            <!-- Overview Cards -->
+            <section class="section overview-section">
+                <h3>📊 Outage Overview</h3>
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-icon total-outages">⚡</div>
+                        <div class="card-content">
+                            <h3>Total Outages</h3>
+                            <div class="card-value" id="totalOutages">0</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon total-duration">⏱️</div>
+                        <div class="card-content">
+                            <h3>Total Duration</h3>
+                            <div class="card-value" id="totalDuration">0h</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon min-time">⬇️</div>
+                        <div class="card-content">
+                            <h3>Min Restoration Time</h3>
+                            <div class="card-value" id="minRestoration">0h</div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon max-time">⬆️</div>
+                        <div class="card-content">
+                            <h3>Max Restoration Time</h3>
+                            <div class="card-value" id="maxRestoration">0h</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Outage Distribution Section -->
+            <section class="section outage-distribution-section">
+                <h3>📈 Outage Distribution</h3>
+                
+                <div class="distribution-content">
+                    <!-- Outage Type Details Table -->
+                    <div class="distribution-table">
+                        <div class="table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Outage Type</th>
+                                        <th>Outage</th>
+                                        <th>Duration</th>
+                                        <th> %</th>
+                                        <th>Duration %</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="outageTypeDetails">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Outage Distribution Chart -->
+                    <div class="distribution-chart">
+                        <div class="chart-with-legend">
+                            <div class="chart-container-wrapper">
+                                <div class="bar-chart-container">
+                                    <div class="chart-container">
+                                        <canvas id="outageTypeChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="outage-type-legend" id="outageTypeLegend">
+                                <h4>Outage Type Codes</h4>
+                                <!-- Legend items will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dzongkhag Performance Section -->
+            <section class="section dzongkhag-section">
+                <h3>🏞️ Dzongkhag Wise Outage</h3>
+                
+                <div class="dzongkhag-content">
+                    <!-- Dzongkhag Details Table -->
+                    <div class="dzongkhag-table">
+                        <div class="table-container">
+                            <table class="stats-table">
+                                <thead>
+                                    <tr>
+                                        <th>Dzongkhag</th>
+                                        <th>Outages</th>
+                                        <th>Total Hours</th>
+                                        <th>Avg. Duration</th>
+                                        <!-- Status column removed -->
+                                    </tr>
+                                </thead>
+                                <tbody id="dzongkhagDetails">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Dzongkhag Chart -->
+                    <div class="dzongkhag-chart">
+                        <div class="dzongkhag-chart-container">
+                            <div class="chart-container">
+                                <canvas id="dzongkhagChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outage Notifications</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .dashboard {
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .top-header {
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            color: white;
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            height: 40px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+
+        .logo-container h3 {
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+
+        .top-nav-right {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .mobile-menu-btn span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        .mobile-nav {
+            display: none;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+        }
+
+        .mobile-nav.active {
+            display: flex;
+        }
+
+        .mobile-nav .nav-link {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Header */
+        .header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-main {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-main h4 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.4rem;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .header-icon {
+            font-size: 1.6rem;
+        }
+
+        .header-actions {
+            flex-shrink: 0;
+        }
+
+        .refresh-btn {
+            background: transparent;
+            color: #666;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .refresh-btn:hover {
+            background: #f8f9fa;
+            border-color: #4caf50;
+            color: #4caf50;
+            transform: rotate(90deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Outage Cards Grid */
+        .outage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .outage-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #eaeaea;
+        }
+
+        .outage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            color: white;
+            padding: 15px 20px;
+            position: relative;
+        }
+
+        .card-header h3 {
+            font-size: 1.2rem;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .priority-badge {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .outage-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .info-icon {
+            color: #2e7d32;
+            font-size: 1.1rem;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .affected-areas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .area-tag {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .card-footer {
+            padding: 15px 20px;
+            background: #f9fafc;
+            border-top: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .view-count {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .card-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #2e7d32;
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .card-btn:hover {
+            background: #1b5e20;
+        }
+
+        .download-btn {
+            background: #388e3c;
+        }
+
+        .download-btn:hover {
+            background: #2e7d32;
+        }
+
+        /* Loading and Error States */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e8f5e9;
+            border-top: 4px solid #2e7d32;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            font-size: 0.95rem;
+            min-width: 150px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .top-nav-right {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: flex;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                align-self: flex-end;
+            }
+
+            .outage-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                flex-direction: column;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .card-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Top Header -->
+        <div class="top-header">
+            <div class="top-header-content">
+               <div class="logo-container">
+                    <!-- Using a placeholder logo - replace with your actual logo -->
+                    <div class="logo" style="background: white; width: 40px; height: 40px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #2e7d32;">BPC</div>
+                    <h3>BPC-POI</h3>
+               </div>
+                <div class="top-nav-right">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="history.html" class="nav-link">Outage History</a>
+                    <a href="report.html" class="nav-link">Reports</a>
+                    <a href="notifications.html" class="nav-link active">Notifications</a>
+                    <a href="others.html" class="nav-link">Others</a>
+                </div>
+                <!-- Mobile Menu Button -->
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <!-- Mobile Navigation -->
+            <div class="mobile-nav" id="mobileNav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="history.html" class="nav-link">Outage History</a>
+                <a href="report.html" class="nav-link">Reports</a>
+                <a href="notifications.html" class="nav-link active">Notifications</a>
+                <a href="others.html" class="nav-link">Others</a>
+            </div>
+        </div>
+
+        <!-- Main Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-main">
+                    <h4>
+                        <span class="header-icon"><i class="fas fa-bell"></i></span>
+                        Outage Notifications
+                    </h4>
+                </div>
+                <div class="header-actions">
+                    <button class="refresh-btn" onclick="loadOutages()" title="Refresh Notifications">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <select class="filter-select" id="dzongkhagFilter" onchange="filterOutages()">
+                    <option value="all">All Dzongkhags</option>
+                    <option value="Pemagatshel">Pemagatshel</option>
+                    <option value="Thimphu">Thimphu</option>
+                    <option value="Paro">Paro</option>
+                    <option value="Punakha">Punakha</option>
+                </select>
+                
+                <select class="filter-select" id="statusFilter" onchange="filterOutages()">
+                    <option value="all">All Status</option>
+                    <option value="Planned">Planned</option>
+                    <option value="Emergency">Emergency</option>
+                </select>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading" class="loading">
+                <div class="loading-spinner"></div>
+                <div>Loading outage notifications...</div>
+            </div>
+
+            <!-- Outage Cards Container -->
+            <div id="outageContainer" class="outage-grid" style="display: none;">
+                <!-- Outage cards will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Error State -->
+            <div id="error" class="error" style="display: none;">
+                <!-- Error messages will be shown here -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwbJM9o6-0ffoErIJrrvRNRgFDMnZ28158gz5LroKoI5wbLiXWOCgd049611Dyk52-_/exec';
+        
+        // Store view counts in localStorage
+        let viewCounts = JSON.parse(localStorage.getItem('outageViewCounts')) || {};
+
+        async function loadOutages() {
+            const loading = document.getElementById('loading');
+            const outageContainer = document.getElementById('outageContainer');
+            const errorDiv = document.getElementById('error');
+
+            // Show loading, hide others
+            loading.style.display = 'flex';
+            outageContainer.style.display = 'none';
+            errorDiv.style.display = 'none';
+
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+
+                if (data.success && data.links && data.links.length > 0) {
+                    // Process the PDF links to extract outage information
+                    const outages = await processPDFData(data.links);
+                    displayOutages(outages);
+                } else {
+                    // No data found
+                    displayNoOutages();
+                }
+            } catch (error) {
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = `
+                    <strong>Error loading notifications:</strong><br>
+                    ${error.message}
+                `;
+                loading.style.display = 'none';
+            }
+        }
+
+        async function processPDFData(pdfLinks) {
+            // In a real implementation, you would extract text from PDFs
+            // For this example, we'll simulate extracting data from your sample
+            
+            const outages = [];
+            
+            // Sample data based on your image
+            const sampleOutage = {
+                id: 1,
+                title: "Plan Maintenance Shutdown - Khothakpa",
+                date: "07-11-2025",
+                startTime: "10:00 AM",
+                endTime: "2:00 PM",
+                dzongkhag: "Pemagatshel",
+                affectedAreas: ["SMCL area", "Barma Chemical area", "Water Treatment Plant"],
+                type: "Planned",
+                priority: "Medium",
+                description: "Plan Maintenance Shutdown - Right of Clearing (ROW) along 11kV POP feeder from Barma Chemical to SMCL T-Off at Khothakpa.",
+                pdfUrl: pdfLinks.length > 0 ? pdfLinks[0] : "#",
+                viewCount: Math.floor(Math.random() * 100) + 20
+            };
+            
+            outages.push(sampleOutage);
+            
+            // Add more sample outages for demonstration
+            if (pdfLinks.length > 1) {
+                outages.push({
+                    id: 2,
+                    title: "Emergency Repair - Thimphu Substation",
+                    date: "15-11-2025",
+                    startTime: "9:00 AM",
+                    endTime: "4:00 PM",
+                    dzongkhag: "Thimphu",
+                    affectedAreas: ["Babesa", "Motithang", "Changzamtok"],
+                    type: "Emergency",
+                    priority: "High",
+                    description: "Emergency repair work at Thimphu substation due to transformer fault.",
+                    pdfUrl: pdfLinks[1],
+                    viewCount: Math.floor(Math.random() * 100) + 20
+                });
+            }
+            
+            if (pdfLinks.length > 2) {
+                outages.push({
+                    id: 3,
+                    title: "Line Maintenance - Paro Valley",
+                    date: "20-11-2025",
+                    startTime: "8:30 AM",
+                    endTime: "1:30 PM",
+                    dzongkhag: "Paro",
+                    affectedAreas: ["Paro Town", "Shaba", "Bondey"],
+                    type: "Planned",
+                    priority: "Medium",
+                    description: "Scheduled line maintenance along Paro Valley distribution network.",
+                    pdfUrl: pdfLinks[2],
+                    viewCount: Math.floor(Math.random() * 100) + 20
+                });
+            }
+            
+            return outages;
+        }
+
+        function displayOutages(outages) {
+            const outageContainer = document.getElementById('outageContainer');
+            const loading = document.getElementById('loading');
+
+            if (outages.length === 0) {
+                displayNoOutages();
+                return;
+            }
+
+            outageContainer.innerHTML = outages.map(outage => {
+                // Format date to be more readable
+                const dateParts = outage.date.split('-');
+                const formattedDate = new Date(`${dateParts[1]}-${dateParts[0]}-${dateParts[2]}`).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                const viewCount = viewCounts[outage.id] || outage.viewCount;
+                
+                return `
+                    <div class="outage-card" data-dzongkhag="${outage.dzongkhag}" data-status="${outage.type}">
+                        <div class="card-header">
+                            <h3>${outage.title}</h3>
+                            <div class="priority-badge">${outage.priority}</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="outage-info">
+                                <div class="info-row">
+                                    <div class="info-icon"><i class="fas fa-calendar-alt"></i></div>
+                                    <div class="info-content">
+                                        <div class="info-label">Date</div>
+                                        <div class="info-value">${formattedDate}</div>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-icon"><i class="fas fa-clock"></i></div>
+                                    <div class="info-content">
+                                        <div class="info-label">Outage Time</div>
+                                        <div class="info-value">${outage.startTime} - ${outage.endTime}</div>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                    <div class="info-content">
+                                        <div class="info-label">Dzongkhag</div>
+                                        <div class="info-value">${outage.dzongkhag}</div>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-icon"><i class="fas fa-tools"></i></div>
+                                    <div class="info-content">
+                                        <div class="info-label">Type</div>
+                                        <div class="info-value">${outage.type}</div>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-icon"><i class="fas fa-home"></i></div>
+                                    <div class="info-content">
+                                        <div class="info-label">Affected Areas</div>
+                                        <div class="affected-areas">
+                                            ${outage.affectedAreas.map(area => 
+                                                `<span class="area-tag">${area}</span>`
+                                            ).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="info-row">
+                                    <div class="info-icon"><i class="fas fa-info-circle"></i></div>
+                                    <div class="info-content">
+                                        <div class="info-label">Reason</div>
+                                        <div class="info-value">${outage.description}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="view-count">
+                                <i class="fas fa-eye"></i> ${viewCount} views
+                            </div>
+                            <div class="card-actions">
+                                <a href="${outage.pdfUrl}" target="_blank" class="card-btn" onclick="incrementViewCount(${outage.id})">
+                                    <i class="fas fa-external-link-alt"></i> View Details
+                                </a>
+                                <a href="${outage.pdfUrl}" download class="card-btn download-btn">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            outageContainer.style.display = 'grid';
+            loading.style.display = 'none';
+        }
+
+        function displayNoOutages() {
+            const outageContainer = document.getElementById('outageContainer');
+            const loading = document.getElementById('loading');
+            
+            outageContainer.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <h3>No Outages or Upcoming Maintenance</h3>
+                    <p>There are currently no power outage notifications or scheduled maintenance.</p>
+                    <p>Check back later for updates.</p>
+                </div>
+            `;
+            
+            outageContainer.style.display = 'grid';
+            loading.style.display = 'none';
+        }
+
+        function incrementViewCount(outageId) {
+            if (outageId) {
+                viewCounts[outageId] = (viewCounts[outageId] || 0) + 1;
+                localStorage.setItem('outageViewCounts', JSON.stringify(viewCounts));
+            }
+        }
+
+        function filterOutages() {
+            const dzongkhagFilter = document.getElementById('dzongkhagFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            const cards = document.querySelectorAll('.outage-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const dzongkhag = card.getAttribute('data-dzongkhag');
+                const status = card.getAttribute('data-status');
+                
+                const dzongkhagMatch = dzongkhagFilter === 'all' || dzongkhag === dzongkhagFilter;
+                const statusMatch = statusFilter === 'all' || status === statusFilter;
+                
+                if (dzongkhagMatch && statusMatch) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show empty state if no cards are visible
+            if (visibleCount === 0 && cards.length > 0) {
+                outageContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">
+                            <i class="fas fa-filter"></i>
+                        </div>
+                        <h3>No Outages Match Your Filters</h3>
+                        <p>Try adjusting your filter criteria to see more results.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Load outages when page loads
+        document.addEventListener('DOMContentLoaded', loadOutages);
+
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileNav = document.getElementById('mobileNav');
+
+            if (mobileMenuBtn && mobileNav) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    mobileNav.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

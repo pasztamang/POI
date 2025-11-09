@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Main Index Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../../style.css">
+
+  <style>
+    :root {
+      --sidebar-w: 0px; /* Remove sidebar width */
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      overflow-x: hidden;
+      background: #f6f8fb;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 1001;
+      backdrop-filter: saturate(140%) blur(6px);
+      background: linear-gradient(180deg, #ffffffE6 0%, #ffffffCC 100%) !important;
+      border-bottom: 1px solid #eef2f5;
+    }
+
+    .topbar .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: .3px;
+    }
+
+    .topbar .brand i {
+      font-size: 18px;
+      color: #0b6;
+    }
+
+    .content {
+      margin-left: 0; /* Remove sidebar margin */
+      transition: margin-left .2s ease;
+    }
+
+    #content {
+      padding: 18px;
+      background:
+        radial-gradient(at 20% 10%, rgba(16, 185, 129, .08), transparent 40%),
+        radial-gradient(at 90% 10%, rgba(59, 130, 246, .07), transparent 45%),
+        #f6f8fb;
+      min-height: calc(100vh - 56px);
+    }
+
+    /* Card Styles */
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px 0;
+    }
+
+    .nav-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      border: 1px solid #eef2f5;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0b6, #34d399);
+    }
+
+    .nav-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      border-color: #0b6;
+    }
+
+    .nav-card i {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      color: #0b6;
+      display: block;
+    }
+
+    .nav-card .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .nav-card .card-description {
+      font-size: 0.9rem;
+      color: #6b7280;
+      line-height: 1.4;
+    }
+
+    .badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #0ea5e9;
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .welcome-section {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      border: 1px solid #eef2f5;
+    }
+
+    .welcome-section h1 {
+      color: #1f2937;
+      margin-bottom: 8px;
+      font-size: 1.8rem;
+    }
+
+    .welcome-section p {
+      color: #6b7280;
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #eef2f5;
+    }
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #0b6, #34d399);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .user-details h4 {
+      margin: 0;
+      color: #1f2937;
+      font-size: 1.1rem;
+    }
+
+    .user-details p {
+      margin: 2px 0 0 0;
+      color: #6b7280;
+      font-size: 0.9rem;
+    }
+
+    /* Form Container Styles */
+    .form-container {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 20px 0;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      border: 1px solid #eef2f5;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: #0b6;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0a5a00;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #d1d5db;
+      color: #6b7280;
+    }
+
+    .btn-outline:hover {
+      background: #f3f4f6;
+      border-color: #0b6;
+      color: #0b6;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .cards-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      
+      .nav-card {
+        padding: 20px;
+      }
+      
+      .welcome-section {
+        padding: 20px;
+      }
+    }
+
+    /* Modal Styles */
+    #messageModal .w3-modal-content {
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+    }
+
+    .loader-spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid #e5e7eb;
+      border-top-color: #0b6;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    #appLoader .w3-modal-content {
+      box-shadow: none;
+    }
+
+    #appLoader {
+      z-index: 2005 !important;
+    }
+
+    #confirmModal,
+    #messageModal,
+    #appLoader {
+      z-index: 5000 !important;
+    }
+
+    #confirmModal .w3-modal-content,
+    #messageModal .w3-modal-content,
+    #appLoader .w3-modal-content {
+      position: relative;
+      z-index: 5001;
+    }
+
+    .topbar .w3-button i { color:#334155; }
+    .topbar .w3-button:hover i { color:#0b6; }
+  </style>
+</head>
+
+<body class="w3-light-grey">
+
+  <!-- Header / Topbar -->
+  <div class="w3-bar w3-white topbar">
+    <span class="w3-bar-item brand">
+      <i class="fa-solid fa-plug-circle-xmark"></i> POIMS-BPC
+    </span>
+
+    <!-- Right-side actions -->
+    <a class="w3-bar-item w3-button w3-white w3-small w3-right"
+      href="https://sites.google.com/view/bpc-power-notification/notification" target="_blank" rel="noopener"
+      title="Publish Notifications" aria-label="Publish Notifications">
+      <i class="fa-solid fa-bell"></i>
+    </a>
+
+    <button class="w3-bar-item w3-button w3-white w3-small w3-right"
+        onclick="logout()" title="Logout" aria-label="Logout">
+      <i class="fa-solid fa-right-from-bracket"></i>
+    </button>
+  </div>
+
+  <!-- Main content -->
+  <main class="content" role="main">
+    <div class="w3-container" id="content">
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <h1>Welcome to POIMS-BPC</h1>
+        <p>Power Outage Information Management System - Bhutan Power Corporation</p>
+        
+        <div class="user-info">
+          <div class="user-avatar">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="user-details">
+            <h4 id="sbUserName">VS Code User</h4>
+            <p id="sbUserOffice">Development Environment</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Cards -->
+      <div class="cards-container">
+        <!-- Dashboard Card -->
+        <div class="nav-card" onclick="loadPage('dashBoard')">
+          <i class="fa-solid fa-gauge-high"></i>
+          <div class="card-title">Dashboard</div>
+          <div class="card-description">Overview of system metrics and recent activities</div>
+        </div>
+
+        <!-- Record Outages Card -->
+        <div class="nav-card" onclick="loadOutagePage()">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <div class="card-title">Record Outages</div>
+          <div class="card-description">Log and manage power outage incidents</div>
+          <span class="badge" id="sbBadgeIndex2" style="display:none;">0</span>
+        </div>
+
+        <!-- Un-confirm Outages Card -->
+        <div class="nav-card" onclick="loadPage('DeleteUnconfirm')">
+          <i class="fa-solid fa-plug-circle-xmark"></i>
+          <div class="card-title">Un-confirm Outages</div>
+          <div class="card-description">Manage unconfirmed outage reports</div>
+        </div>
+
+        <!-- Planned Notification Card -->
+        <div class="nav-card" onclick="loadPage('plannedNotification')">
+          <i class="fa-solid fa-calendar-check"></i>
+          <div class="card-title">Planned Notification</div>
+          <div class="card-description">Schedule and manage planned outage notifications</div>
+        </div>
+
+        <!-- Other Notification Card -->
+        <div class="nav-card" onclick="loadPage('otherOutagesNotification')">
+          <i class="fa-solid fa-bell"></i>
+          <div class="card-title">Other Notification</div>
+          <div class="card-description">Handle other types of outage notifications</div>
+        </div>
+
+        <!-- Cancel Notification Card -->
+        <div class="nav-card" onclick="loadPage('cancelNotificationForm')">
+          <i class="fa-solid fa-bell-slash"></i>
+          <div class="card-title">Cancel Notification</div>
+          <div class="card-description">Cancel scheduled outage notifications</div>
+        </div>
+
+        <!-- F&C Mapping Card -->
+        <div class="nav-card" onclick="loadPage('feederCustManagment')">
+          <i class="fa-solid fa-sitemap"></i>
+          <div class="card-title">F&C Mapping</div>
+          <div class="card-description">Feeder and customer relationship management</div>
+        </div>
+
+        <!-- Download Trip Card -->
+        <div class="nav-card" onclick="loadPage('dataBaseDownLoadForm')">
+          <i class="fa-solid fa-file-arrow-down"></i>
+          <div class="card-title">Download Trip</div>
+          <div class="card-description">Download trip data and reports</div>
+        </div>
+
+        <!-- About Card -->
+        <div class="nav-card" onclick="loadPage('about')">
+          <i class="fa-solid fa-house"></i>
+          <div class="card-title">About</div>
+          <div class="card-description">System information and documentation</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Common Modal Message -->
+  <div id="messageModal" class="w3-modal" style="display:none;">
+    <div class="w3-modal-content w3-animate-top" style="max-width:400px;">
+      <header class="w3-container" id="messageHeader" style="background:#4CAF50;color:white;">
+        <span onclick="hideMessage()" class="w3-button w3-display-topright">&times;</span>
+        <h4 id="messageTitle">Message</h4>
+      </header>
+      <div class="w3-container" style="padding:20px;">
+        <p id="messageText"></p>
+      </div>
+      <footer class="w3-container w3-light-grey" style="text-align:right;">
+        <button class="w3-button w3-border" onclick="hideMessage()">OK</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div id="confirmModal" class="w3-modal" style="display:none;">
+    <div class="w3-modal-content w3-round-large" style="max-width:520px;">
+      <header id="confirmHeader" class="w3-container" style="background:#2196F3;color:#fff;">
+        <span id="confirmClose" class="w3-button w3-display-topright" aria-label="Close">&times;</span>
+        <h5 id="confirmTitle" style="margin:8px 0;">Please Confirm</h5>
+      </header>
+      <div class="w3-container" style="padding:16px;">
+        <p id="confirmText" style="margin:0;"></p>
+      </div>
+      <footer class="w3-container w3-right-align" style="padding:12px 16px;">
+        <button id="confirmCancel" class="w3-button w3-white w3-border w3-round-large" style="margin-right:8px;">Cancel</button>
+        <button id="confirmOk" class="w3-button w3-round-large" style="background:#00897B;color:#fff;">OK</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Global Loader Modal -->
+  <div id="appLoader" class="w3-modal" aria-hidden="true" style="display:none;">
+    <div class="w3-display-container" style="width:100%;height:100%">
+      <div class="w3-display-middle w3-center">
+        <div class="w3-card w3-white w3-round-large w3-padding">
+          <div class="loader-spinner"></div>
+          <div class="w3-small w3-margin-top">Loading…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Enhanced navigation functions with proper path handling
+    async function loadOutagePage() {
+      showLoader();
+      
+      try {
+        // Try multiple possible paths for the outage form
+        const possiblePaths = [
+          '../external page/outage.html',  // Go up from internal page to frontend, then into external page
+          './external page/outage.html',   // Relative to current directory
+          'outageForm.html',     // Same directory level
+          '../external%20page/outage.html' // URL encoded version
+        ];
+        
+        let outageHtml = '';
+        let successfulPath = '';
+        
+        // Try each path until one works
+        for (const path of possiblePaths) {
+          try {
+            console.log(`Trying path: ${path}`);
+            const response = await fetch(path);
+            if (response.ok) {
+              outageHtml = await response.text();
+              successfulPath = path;
+              console.log(`Successfully loaded from: ${path}`);
+              break;
+            }
+          } catch (e) {
+            console.log(`Path ${path} failed:`, e);
+            continue;
+          }
+        }
+        
+        if (outageHtml) {
+          displayOutageForm(outageHtml);
+        } else {
+          // If no path worked, show error message
+          showOutageFormError();
+        }
+        
+      } catch (error) {
+        console.error('Error loading outage form:', error);
+        showOutageFormError();
+      } finally {
+        hideLoader();
+      }
+    }
+
+    function displayOutageForm(htmlContent) {
+      document.getElementById('content').innerHTML = `
+        <div class="form-container">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: #1f2937;">
+              <i class="fa-solid fa-pen-to-square" style="color: #0b6; margin-right: 10px;"></i>
+              Record Outages
+            </h2>
+            <button onclick="goToDashboard()" class="btn btn-outline">
+              <i class="fa-solid fa-arrow-left"></i>
+              Back to Dashboard
+            </button>
+          </div>
+          <div id="outage-form-content">${htmlContent}</div>
+        </div>
+      `;
+    }
+
+    function showOutageFormError() {
+      document.getElementById('content').innerHTML = `
+        <div class="form-container">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: #1f2937;">
+              <i class="fa-solid fa-pen-to-square" style="color: #0b6; margin-right: 10px;"></i>
+              Record Outages
+            </h2>
+            <button onclick="goToDashboard()" class="btn btn-outline">
+              <i class="fa-solid fa-arrow-left"></i>
+              Back to Dashboard
+            </button>
+          </div>
+          <div style="text-align: center; padding: 40px 20px;">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size: 3rem; color: #dc2626; margin-bottom: 20px;"></i>
+            <h3 style="color: #dc2626; margin-bottom: 10px;">Unable to Load Outage Form</h3>
+            <p style="color: #6b7280; margin-bottom: 20px;">
+              The outage form could not be loaded. Please check that the file exists at the correct path.
+            </p>
+            <div style="background: #f3f4f6; padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 20px;">
+              <p style="margin: 0; font-family: monospace; color: #374151;">
+                Expected path: ../external page/outage.html
+              </p>
+            </div>
+            <button onclick="loadOutagePage()" class="btn btn-primary">
+              <i class="fa-solid fa-rotate"></i>
+              Try Again
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function goToDashboard() {
+      // Reset to the main dashboard view
+      document.getElementById('content').innerHTML = `
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+          <h1>Welcome to POIMS-BPC</h1>
+          <p>Power Outage Information Management System - Bhutan Power Corporation</p>
+          
+          <div class="user-info">
+            <div class="user-avatar">
+              <i class="fa-solid fa-user"></i>
+            </div>
+            <div class="user-details">
+              <h4 id="sbUserName">VS Code User</h4>
+              <p id="sbUserOffice">Development Environment</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Cards -->
+        <div class="cards-container">
+          <div class="nav-card" onclick="loadPage('dashBoard')">
+            <i class="fa-solid fa-gauge-high"></i>
+            <div class="card-title">Dashboard</div>
+            <div class="card-description">Overview of system metrics and recent activities</div>
+          </div>
+
+          <div class="nav-card" onclick="loadOutagePage()">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <div class="card-title">Record Outages</div>
+            <div class="card-description">Log and manage power outage incidents</div>
+            <span class="badge" id="sbBadgeIndex2" style="display:none;">0</span>
+          </div>
+
+          <div class="nav-card" onclick="loadPage('DeleteUnconfirm')">
+            <i class="fa-solid fa-plug-circle-xmark"></i>
+            <div class="card-title">Un-confirm Outages</div>
+            <div class="card-description">Manage unconfirmed outage reports</div>
+          </div>
+
+          <div class="nav-card" onclick="loadPage('plannedNotification')">
+            <i class="fa-solid fa-calendar-check"></i>
+            <div class="card-title">Planned Notification</div>
+            <div class="card-description">Schedule and manage planned outage notifications</div>
+          </div>
+
+          <div class="nav-card" onclick="loadPage('otherOutagesNotification')">
+            <i class="fa-solid fa-bell"></i>
+            <div class="card-title">Other Notification</div>
+            <div class="card-description">Handle other types of outage notifications</div>
+          </div>
+
+          <div class="nav-card" onclick="loadPage('cancelNotificationForm')">
+            <i class="fa-solid fa-bell-slash"></i>
+            <div class="card-title">Cancel Notification</div>
+            <div class="card-description">Cancel scheduled outage notifications</div>
+          </div>
+
+          <div class="nav-card" onclick="loadPage('feederCustManagment')">
+            <i class="fa-solid fa-sitemap"></i>
+            <div class="card-title">F&C Mapping</div>
+            <div class="card-description">Feeder and customer relationship management</div>
+          </div>
+
+          <div class="nav-card" onclick="loadPage('dataBaseDownLoadForm')">
+            <i class="fa-solid fa-file-arrow-down"></i>
+            <div class="card-title">Download Trip</div>
+            <div class="card-description">Download trip data and reports</div>
+          </div>
+
+          <div class="nav-card" onclick="loadPage('about')">
+            <i class="fa-solid fa-house"></i>
+            <div class="card-title">About</div>
+            <div class="card-description">System information and documentation</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function loadPage(pageName) {
+      // Show loading message
+      showMessage(`Loading ${pageName.replace(/([A-Z])/g, ' $1')}...`, 'info');
+      
+      // Simulate page loading (replace with actual content loading)
+      setTimeout(() => {
+        showMessage(`${pageName.replace(/([A-Z])/g, ' $1')} page would load here in a real application.`, 'info', 'Page Navigation');
+      }, 1000);
+    }
+
+    function logout() {
+      showMessage('Logout functionality would be implemented here.', 'info', 'Logout');
+    }
+
+    function showMessage(text, type = "info", title = "Message") {
+      const modal = document.getElementById("messageModal");
+      const header = document.getElementById("messageHeader");
+      const msgText = document.getElementById("messageText");
+      const msgTitle = document.getElementById("messageTitle");
+      const COLORS = { success: '#4CAF50', error: '#f44336', warning: '#ff9800', info: '#2196F3' };
+      
+      header.style.background = COLORS[type] || COLORS.info;
+      msgTitle.textContent = title;
+      msgText.textContent = String(text);
+      modal.style.display = "block";
+    }
+
+    function hideMessage() {
+      const m = document.getElementById("messageModal");
+      if (m) m.style.display = "none";
+    }
+
+    function showLoader() {
+      const m = document.getElementById("appLoader");
+      if (m) m.style.display = 'block';
+    }
+
+    function hideLoader() {
+      const m = document.getElementById("appLoader");
+      if (m) m.style.display = 'none';
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set user info
+      document.getElementById('sbUserName').textContent = 'VS Code User';
+      document.getElementById('sbUserOffice').textContent = 'Development Environment';
+      
+      // Demo badge for testing
+      setTimeout(() => {
+        const badge = document.getElementById('sbBadgeIndex2');
+        if (badge) {
+          badge.textContent = '3';
+          badge.style.display = 'inline-block';
+        }
+      }, 2000);
+    });
+
+    // Make functions globally available
+    window.loadPage = loadPage;
+    window.loadOutagePage = loadOutagePage;
+    window.logout = logout;
+    window.showMessage = showMessage;
+    window.hideMessage = hideMessage;
+    window.showLoader = showLoader;
+    window.hideLoader = hideLoader;
+    window.goToDashboard = goToDashboard;
+  </script>
+
+</body>
+</html>
